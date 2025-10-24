@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>章振威新闻网 - 专业新闻门户</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+        
+        .header-info {
+            text-align: right;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .nav {
+            background: #fff;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #2a5298;
+            color: white;
+        }
+        
+        .add-news-btn {
+            background: #28a745;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .add-news-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .news-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .news-content {
+            padding: 1.5rem;
+        }
+        
+        .news-category {
+            background: #2a5298;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+        
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .news-summary {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+        
+        .news-author {
+            font-weight: 500;
+        }
+        
+        .news-date {
+            color: #999;
+        }
+        
+        /* 添加新闻模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #000;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: #2a5298;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            background: #1e3c72;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        /* 新闻详情页样式 */
+        .news-detail {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .news-detail-header {
+            margin-bottom: 2rem;
+        }
+        
+        .news-detail-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
+        .news-detail-meta {
+            display: flex;
+            gap: 2rem;
+            color: #666;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .news-detail-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .news-detail-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        .file-info {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 1rem;
+            }
+            
+            .news-detail-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo" onclick="showNewsList()">📰 章振威新闻网</div>
+            <div class="header-info">
+                <div>今日新闻 · 权威报道</div>
+                <div id="current-time"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="nav-content">
+            <ul class="nav-links">
+                <li><a href="#" class="active" onclick="filterNews('all')">全部新闻</a></li>
+                <li><a href="#" onclick="filterNews('政治')">政治</a></li>
+                <li><a href="#" onclick="filterNews('经济')">经济</a></li>
+                <li><a href="#" onclick="filterNews('科技')">科技</a></li>
+                <li><a href="#" onclick="filterNews('体育')">体育</a></li>
+                <li><a href="#" onclick="filterNews('娱乐')">娱乐</a></li>
+                <li><a href="#" onclick="filterNews('社会')">社会</a></li>
+            </ul>
+            <button class="add-news-btn" onclick="openAddNewsModal()">📝 添加新闻</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 新闻列表 -->
+        <div id="news-list" class="news-grid">
+            <!-- 新闻卡片将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 新闻详情页 -->
+        <div id="news-detail" class="news-detail">
+            <button class="back-btn" onclick="showNewsList()">← 返回新闻列表</button>
+            <div class="news-detail-header">
+                <h1 id="detail-title" class="news-detail-title"></h1>
+                <div class="news-detail-meta">
+                    <span id="detail-author"></span>
+                    <span id="detail-date"></span>
+                    <span id="detail-category" class="news-category"></span>
+                    <button id="detail-delete-btn" class="delete-btn" style="display: none;" onclick="deleteNews()">🗑️ 删除新闻</button>
+                </div>
+            </div>
+            <img id="detail-image" class="news-detail-image" alt="">
+            <div id="detail-content" class="news-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- 添加新闻模态框 -->
+    <div id="addNewsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddNewsModal()">&times;</span>
+            <h2>📝 添加新闻</h2>
+            <div id="success-message" class="success-message">新闻添加成功！</div>
+            <form id="addNewsForm">
+                <div class="form-group">
+                    <label for="newsTitle">新闻标题 *</label>
+                    <input type="text" id="newsTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="newsCategory">新闻分类 *</label>
+                    <select id="newsCategory" name="category" required>
+                        <option value="">请选择分类</option>
+                        <option value="政治">政治</option>
+                        <option value="经济">经济</option>
+                        <option value="科技">科技</option>
+                        <option value="体育">体育</option>
+                        <option value="娱乐">娱乐</option>
+                        <option value="社会">社会</option>
+                        <option value="国际">国际</option>
+                        <option value="教育">教育</option>
+                        <option value="健康">健康</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newsAuthor">作者姓名 *</label>
+                    <input type="text" id="newsAuthor" name="author" required>
+                </div>
+                <div class="form-group">
+                    <label for="newsImage">新闻图片URL</label>
+                    <input type="url" id="newsImage" name="image" placeholder="https://example.com/image.jpg">
+                    <small style="color: #666; font-size: 0.9rem;">如果不填写，将使用默认图片</small>
+                </div>
+                <div class="form-group">
+                    <label for="newsSummary">新闻摘要 *</label>
+                    <textarea id="newsSummary" name="summary" placeholder="请输入新闻摘要，建议50-100字..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="newsContent">新闻内容 *</label>
+                    <textarea id="newsContent" name="content" placeholder="请输入完整的新闻内容..." style="height: 200px;" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">📤 发布新闻</button>
+                
+                <div class="file-info">
+                    <strong>📁 存储说明：</strong><br>
+                    • 新闻数据保存在浏览器本地存储中<br>
+                    • 数据在同一浏览器中永久保存<br>
+                    • 清除浏览器数据会删除所有自定义新闻
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 默认新闻数据
+        const defaultNews = [
+            {
+                id: 1,
+                title: "中国经济展现强大韧性，第三季度GDP同比增长4.9%",
+                category: "经济",
+                author: "李明华",
+                date: "2024-01-15",
+                image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400",
+                summary: "国家统计局发布最新数据显示，中国经济在复杂多变的国际环境下展现出强大韧性，第三季度GDP同比增长4.9%，超出市场预期...",
+                content: `国家统计局今日发布的最新数据显示，中国经济在复杂多变的国际环境下展现出强大韧性。第三季度GDP同比增长4.9%，超出市场预期的4.5%。
+
+这一增长数据反映了中国经济的内生动力不断增强。从产业结构来看，第三产业增加值同比增长5.3%，对经济增长的贡献率达到62.8%。制造业投资同比增长6.2%，显示出实体经济的活力。
+
+专家分析认为，这一成绩的取得主要得益于以下几个方面：
+
+一是内需潜力持续释放。消费市场逐步回暖，1-9月份，社会消费品零售总额同比增长6.8%，其中网上零售额增长11.6%。
+
+二是创新驱动发展成效显著。高技术制造业增加值同比增长11.3%，明显快于规模以上工业增速。
+
+三是对外贸易保持稳定。前三季度货物贸易进出口总值30.44万亿元，同比增长0.2%，在全球贸易低迷的背景下实现了正增长。
+
+展望第四季度，专家普遍认为，随着各项政策措施的持续发力，中国经济有望继续保持稳中向好的发展态势。`,
+                isDefault: true
+            },
+            {
+                id: 2,
+                title: "人工智能技术在医疗领域取得重大突破",
+                category: "科技",
+                author: "张科研",
+                date: "2024-01-14",
+                image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400",
+                summary: "最新研究表明，AI诊断系统在早期癌症检测方面的准确率已达到95%以上，为精准医疗提供了强有力的技术支撑...",
+                content: `近日，由中科院牵头的多家科研院所联合发布了人工智能在医疗诊断领域的最新研究成果。该研究表明，基于深度学习的AI诊断系统在早期癌症检测方面的准确率已达到95%以上，为精准医疗提供了强有力的技术支撑。
+
+这套AI诊断系统采用了最先进的卷积神经网络和transformer架构，通过对超过100万例医学影像数据的训练，能够准确识别肺癌、乳腺癌、肝癌等多种常见癌症的早期征象。
+
+研究团队负责人表示："这项技术的突破性在于，它不仅能够提高诊断准确率，还能大幅缩短诊断时间。原本需要专家数小时才能完成的影像分析，现在只需几分钟就能得出结果。"
+
+临床试验数据显示，该系统在实际应用中表现出色：
+• 肺癌早期检测准确率达到96.7%
+• 乳腺癌筛查敏感性达到94.3%
+• 误诊率降低至2.1%
+• 诊断时间缩短85%
+
+目前，这套系统已在全国50多家三甲医院开始试点应用，预计年内将在更多医疗机构推广使用。专家预测，这项技术的普及将极大提升我国癌症早期发现率，挽救更多患者生命。
+
+此外，该技术还有望扩展到其他疾病的诊断领域，包括心血管疾病、神经系统疾病等，为构建智慧医疗体系奠定坚实基础。`,
+                isDefault: true
+            },
+            {
+                id: 3,
+                title: "新能源汽车产业迎来爆发式增长",
+                category: "经济",
+                author: "王产业",
+                date: "2024-01-13",
+                image: "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=400",
+                summary: "2024年新能源汽车销量预计突破1000万辆，充电基础设施建设全面加速，产业链不断完善...",
+                content: `据中国汽车工业协会最新统计数据显示，2024年前11个月，我国新能源汽车产销量分别达到958.5万辆和942.3万辆，同比增长35.9%和35.1%。预计全年销量将突破1000万辆大关，创历史新高。
+
+新能源汽车市场的快速发展得益于多重因素：
+
+**政策支持持续发力**
+国家继续实施新能源汽车购置税减免政策，各地方政府也出台了相应的补贴和优惠措施。同时，双积分政策的实施推动传统车企加快新能源转型。
+
+**技术创新不断突破**
+电池技术持续进步，能量密度不断提升，成本持续下降。磷酸铁锂电池、三元锂电池技术日趋成熟，固态电池等新技术研发加速推进。
+
+**基础设施日益完善**
+截至11月底，全国充电基础设施累计数量为821.8万台，同比增长51.6%。高速公路服务区充电设施覆盖率达到95%以上。
+
+**产业链协同发展**
+从上游的锂矿开采、电池制造，到中游的整车生产，再到下游的销售服务，整个产业链不断完善和优化。
+
+市场分析师认为，随着技术进步和成本下降，新能源汽车的竞争优势将进一步凸显，预计未来几年仍将保持高速增长态势。`,
+                isDefault: true
+            }
+        ];
+
+        let newsData = [...defaultNews];
+        let currentNewsId = null;
+
+        // 显示当前时间
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // 从localStorage加载用户添加的新闻
+        function loadUserNews() {
+            try {
+                const userNews = localStorage.getItem('userNews');
+                if (userNews) {
+                    const parsedNews = JSON.parse(userNews);
+                    // 合并默认新闻和用户新闻，用户新闻在前
+                    newsData = [...parsedNews, ...defaultNews];
+                }
+            } catch (error) {
+                console.error('加载用户新闻失败:', error);
+            }
+        }
+
+        // 保存用户新闻到localStorage
+        function saveUserNews() {
+            try {
+                const userNews = newsData.filter(news => !news.isDefault);
+                localStorage.setItem('userNews', JSON.stringify(userNews));
+                
+                // 保存到模拟的文件系统信息
+                const newsInfo = {
+                    totalNews: userNews.length,
+                    lastUpdate: new Date().toLocaleString('zh-CN'),
+                    storageSize: JSON.stringify(userNews).length
+                };
+                localStorage.setItem('newsInfo', JSON.stringify(newsInfo));
+            } catch (error) {
+                console.error('保存用户新闻失败:', error);
+            }
+        }
+
+        // 渲染新闻列表
+        function renderNews(newsArray = newsData) {
+            const newsContainer = document.getElementById('news-list');
+            newsContainer.innerHTML = '';
+
+            if (newsArray.length === 0) {
+                newsContainer.innerHTML = '<div style="text-align: center; color: #666; padding: 2rem;">暂无新闻数据</div>';
+                return;
+            }
+
+            newsArray.forEach(news => {
+                const newsCard = document.createElement('div');
+                newsCard.className = 'news-card';
+                newsCard.onclick = () => showNewsDetail(news.id);
+                
+                const defaultImage = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400';
+                
+                newsCard.innerHTML = `
+                    <img src="${news.image || defaultImage}" alt="${news.title}" class="news-image" 
+                         onerror="this.src='${defaultImage}'">
+                    <div class="news-content">
+                        <span class="news-category">${news.category}</span>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-summary">${news.summary}</p>
+                        <div class="news-meta">
+                            <span class="news-author">👤 ${news.author}</span>
+                            <span class="news-date">📅 ${news.date}</span>
+                            ${!news.isDefault ? '<span style="color: #28a745; font-size: 0.8rem;">📁 用户添加</span>' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                newsContainer.appendChild(newsCard);
+            });
+        }
+
+        // 显示新闻详情
+        function showNewsDetail(newsId) {
+            const news = newsData.find(n => n.id === newsId);
+            if (!news) return;
+
+            currentNewsId = newsId;
+            
+            document.getElementById('news-list').style.display = 'none';
+            document.getElementById('news-detail').style.display = 'block';
+
+            document.getElementById('detail-title').textContent = news.title;
+            document.getElementById('detail-author').textContent = `👤 作者：${news.author}`;
+            document.getElementById('detail-date').textContent = `📅 发布时间：${news.date}`;
+            document.getElementById('detail-category').textContent = news.category;
+            
+            const defaultImage = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400';
+            document.getElementById('detail-image').src = news.image || defaultImage;
+            document.getElementById('detail-image').onerror = function() {
+                this.src = defaultImage;
+            };
+            
+            // 格式化内容，将换行转为段落
+            const formattedContent = news.content
+                .split('\n\n')
+                .map(paragraph => paragraph.trim())
+                .filter(paragraph => paragraph.length > 0)
+                .map(paragraph => `<p>${paragraph}</p>`)
+                .join('');
+            
+            document.getElementById('detail-content').innerHTML = formattedContent;
+
+            // 只有用户添加的新闻才显示删除按钮
+            const deleteBtn = document.getElementById('detail-delete-btn');
+            if (news.isDefault) {
+                deleteBtn.style.display = 'none';
+            } else {
+                deleteBtn.style.display = 'inline-block';
+            }
+
+            // 滚动到顶部
+            window.scrollTo(0, 0);
+        }
+
+        // 显示新闻列表
+        function showNewsList() {
+            document.getElementById('news-detail').style.display = 'none';
+            document.getElementById('news-list').style.display = 'grid';
+            currentNewsId = null;
+        }
+
+        // 过滤新闻
+        function filterNews(category) {
+            // 更新导航激活状态
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 过滤并渲染新闻
+            if (category === 'all') {
+                renderNews();
+            } else {
+                const filteredNews = newsData.filter(news => news.category === category);
+                renderNews(filteredNews);
+            }
+        }
+
+        // 删除新闻
+        function deleteNews() {
+            if (!currentNewsId) return;
+            
+            const news = newsData.find(n => n.id === currentNewsId);
+            if (!news || news.isDefault) {
+                alert('无法删除默认新闻！');
+                return;
+            }
+
+            if (confirm('确定要删除这条新闻吗？删除后无法恢复。')) {
+                // 从数组中移除
+                newsData = newsData.filter(n => n.id !== currentNewsId);
+                
+                // 保存到localStorage
+                saveUserNews();
+                
+                // 返回新闻列表
+                showNewsList();
+                renderNews();
+                
+                alert('新闻删除成功！');
+            }
+        }
+
+        // 打开添加新闻模态框
+        function openAddNewsModal() {
+            document.getElementById('addNewsModal').style.display = 'block';
+        }
+
+        // 关闭添加新闻模态框
+        function closeAddNewsModal() {
+            document.getElementById('addNewsModal').style.display = 'none';
+            document.getElementById('addNewsForm').reset();
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // 生成新的新闻ID
+        function generateNewsId() {
+            return Date.now();
+        }
+
+        // 处理添加新闻表单提交
+        document.getElementById('addNewsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // 验证必填字段
+            const title = formData.get('title').trim();
+            const category = formData.get('category');
+            const author = formData.get('author').trim();
+            const summary = formData.get('summary').trim();
+            const content = formData.get('content').trim();
+            
+            if (!title || !category || !author || !summary || !content) {
+                alert('请填写所有必填字段！');
+                return;
+            }
+
+            const newNews = {
+                id: generateNewsId(),
+                title: title,
+                category: category,
+                author: author,
+                date: new Date().toISOString().split('T')[0],
+                image: formData.get('image').trim() || '',
+                summary: summary,
+                content: content,
+                isDefault: false
+            };
+
+            // 添加到新闻数据数组开头（最新新闻）
+            newsData.unshift(newNews);
+            
+            // 保存到localStorage
+            saveUserNews();
+            
+            // 重新渲染新闻列表
+            renderNews();
+            
+            // 显示成功消息
+            document.getElementById('success-message').style.display = 'block';
+            
+            // 2秒后关闭模态框
+            setTimeout(() => {
+                closeAddNewsModal();
+            }, 2000);
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('addNewsModal');
+            if (event.target === modal) {
+                closeAddNewsModal();
+            }
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserNews(); // 加载用户新闻
+            updateTime();
+            renderNews();
+            setInterval(updateTime, 60000); // 每分钟更新时间
+        });
+
+        // 导出新闻数据（可选功能）
+        function exportNews() {
+            const userNews = newsData.filter(news => !news.isDefault);
+            const dataStr = JSON.stringify(userNews, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `news_export_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 导入新闻数据（可选功能）
+        function importNews() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedNews = JSON.parse(e.target.result);
+                            if (Array.isArray(importedNews)) {
+                                // 合并导入的新闻
+                                newsData = [...importedNews, ...newsData];
+                                saveUserNews();
+                                renderNews();
+                                alert('新闻导入成功！');
+                            } else {
+                                alert('文件格式不正确！');
+                            }
+                        } catch (error) {
+                            alert('文件解析失败！');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+    </script>
+</body>
+</html>
