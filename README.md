@@ -40,8 +40,8 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone <你的GitHub仓库地址>
-cd <你的项目目录>
+git clone https://github.com/xavisshop/zzwh.git
+cd zzwh
 ```
 
 ### 2. 数据库设置
@@ -102,4 +102,5 @@ docker-compose up --build -d
       "content": "新闻内容"
     }
     ```
+
 - `DELETE /api/news/:id`: 删除指定 ID 的新闻。
