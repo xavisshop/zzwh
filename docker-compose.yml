@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   db:
@@ -34,4 +34,5 @@ services:
         condition: service_healthy
 
 volumes:
+
   db_data:
